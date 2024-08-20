@@ -1,3 +1,5 @@
+## KU Polls: Online Survey Questions 
+
 An application to conduct online polls and surveys based
 on the [Django Tutorial project](TODO-write-URL-of-the-django-tutorial-here), with
 additional features.
