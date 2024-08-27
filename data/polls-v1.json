@@ -21,7 +21,7 @@
   "fields": {
     "question": 2,
     "choice_text": "Motorbike taxi",
-    "votes": 1
+    "votes": 2
   }
 },
 {
@@ -39,7 +39,7 @@
   "fields": {
     "question": 2,
     "choice_text": "Personal Vehicle",
-    "votes": 0
+    "votes": 1
   }
 },
 {
@@ -75,6 +75,33 @@
   "fields": {
     "question": 3,
     "choice_text": "Faculty of Engineering Food Center (Bar Witsawa IUP)",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 14,
+  "fields": {
+    "question": 2,
+    "choice_text": "Walking (a very enthusiastic walk)",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 15,
+  "fields": {
+    "question": 2,
+    "choice_text": "Electric Scooter",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 16,
+  "fields": {
+    "question": 2,
+    "choice_text": "Bicycle",
     "votes": 0
   }
 }
