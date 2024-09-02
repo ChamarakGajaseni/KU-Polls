@@ -30,11 +30,11 @@ class DetailView(generic.DetailView):
         """
         Excludes any questions that aren't published yet.
         """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+        return Question.objects.filter()
     
     def get(self, request, *args, **kwargs):
         """
-        Check if voting is allowed using self.object.can_vote().
+        Check if Question is pending using self.object.can_vote().
         If voting is not allowed, we set an error.
         Then, we redirect the user to the polls index page.
         """
