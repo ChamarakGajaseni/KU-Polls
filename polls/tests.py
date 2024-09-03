@@ -99,17 +99,66 @@ class QuestionModelTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
+        
+    def is_published_with_future_pub_date(self):
+        """
+        is_published should be false,
+        if question is set to be published in the future.
+        """
+        future_pub_date = timezone.now() +timezone.timedelta(days=1)
+        question = Question(pubdate=future_pub_date)
+        self.assertIs(question.is_published(),False)
+        
+    def is_published_with_past_pub_date(self):
+        """
+        is_published should be True,
+        if question was published in the past.
+        """
+        past_pub_date = timezone.now() - timezone.timedelta(days=1)
+        question = Question(pubdate=past_pub_date)
+        self.assertIs(question.is_published(),True)
+        
+    def is_published_now(self):
+        """
+        is_published should be True,
+        if question is published now.
+        """
+        question = Question(pubdate=timezone.now())
+        self.assertIs(question.is_published(),True)
+    
+    def test_cannot_vote_after_end_date(self):
+        """
+        Cannot vote if current time is passed end_date.
+        """
+        past_pub_date = timezone.now() - timezone.timedelta(days=1)
+        question = Question(pub_date=timezone.now(), end_date=past_pub_date)
+        self.assertIs(question.can_vote(), False)
 
+    def test_cannot_vote_before_pub_date(self):
+        """
+        Cannot vote if current time is passed end_date.
+        """
+        future_pub_date = timezone.now() + timezone.timedelta(days=1)
+        question = Question(pub_date=future_pub_date, end_date= future_pub_date + timezone.timedelta(days=10))
+        self.assertIs(question.can_vote(), False)
+        
+    def test_can_vote_published_now(self):
+        """
+        Can vote if question pub_date is equals to the time now
+        """
+        question = Question(pub_date=timezone.now(), end_date=timezone.now() + timezone.timedelta(days=1) )
+        self.assertIs(question.can_vote(), True)
+
+    def test_can_vote_during_pending_time(self):
+        """
+        Can vote if current time is between pub_date and end_date.
+        """
+        past_pub_date = timezone.now() - timezone.timedelta(days=1)
+        future_end_date = timezone.now() + timezone.timedelta(days=1)
+        question = Question(pub_date=past_pub_date,end_date=future_end_date)
+        self.assertIs(question.can_vote(), True)
+        
 class QuestionDetailViewTests(TestCase):
-    def test_future_question(self):
-        """
-        The detail view of a question with a pub_date in the future
-        returns a 404 not found.
-        """
-        future_question = create_question(question_text='Future question.', days=5)
-        url = reverse('polls:detail', args=(future_question.id,))
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
 
     def test_past_question(self):
         """

@@ -1,8 +1,10 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
+
 
 from .models import Choice, Question
 
@@ -28,8 +30,19 @@ class DetailView(generic.DetailView):
         """
         Excludes any questions that aren't published yet.
         """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-
+        return Question.objects.filter()
+    
+    def get(self, request, *args, **kwargs):
+        """
+        Check if Question is pending using self.object.can_vote().
+        If voting is not allowed, we set an error.
+        Then, we redirect the user to the polls index page.
+        """
+        self.object = self.get_object()
+        if not self.object.can_vote():
+            messages.error(request, "Voting is not allowed for this question.")
+            return redirect('polls:index')
+        return super().get(request, *args, **kwargs)
 
 class ResultsView(generic.DetailView):
     model = Question
@@ -37,8 +50,17 @@ class ResultsView(generic.DetailView):
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    
+    
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        
+    except (KeyError, not question.can_vote):
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "The Question is not pending currently.",
+        })
+        
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form.
         return render(request, 'polls/detail.html', {
