@@ -12,17 +12,24 @@
 
 {% if latest_question_list %}
     <ul>
-        <table>
-            {% for question in latest_question_list %}
-            <tr>
-    
-                <td>
-                    <a href="{% url 'polls:detail' question.id %}"> {{ question.question_text }}</a>
-                </td>
-                
-            </tr>
-            {% endfor %}
-        </table>
+        <div class= 'index_table'>
+            <table>
+                {% for question in latest_question_list %}
+                <tr>
+        
+                    <td>
+                        <a href="{% url 'polls:detail' question.id %}"> {{ question.question_text }}</a>
+                        
+                    </td>
+
+                    <td>
+                        <a href="{% url 'polls:results' question.id %}"> Results </a>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </ul>
 {% else %}
     <p>No polls are available.</p>
