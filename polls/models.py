@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published', default=timezone.now())
     end_date = models.DateTimeField('ending date',null=True)
     
 
