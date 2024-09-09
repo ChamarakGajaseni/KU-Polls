@@ -48,7 +48,7 @@ class UserAuthTest(django.test.TestCase):
               self.client.login(username=self.username, password=self.password)
                        )
         # visit the logout page
-        response = self.client.get(logout_url)
+        response = self.client.post(logout_url)
         self.assertEqual(302, response.status_code)
         
         # should redirect us to where? Polls index? Login?

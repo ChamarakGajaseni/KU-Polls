@@ -23,7 +23,7 @@ class IndexView(generic.ListView):
         ).order_by('-pub_date')[:5]
 
 
-class DetailView(LoginRequiredMixin,generic.DetailView):
+class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
 
