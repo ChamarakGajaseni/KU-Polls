@@ -1,7 +1,7 @@
 import datetime
 from django.test import TestCase
 from django.utils import timezone
-from .models import Question
+from .models import Question, User
 from django.urls import reverse
 
 def create_question(question_text, days):
@@ -15,6 +15,7 @@ def create_question(question_text, days):
 
 
 class QuestionIndexViewTests(TestCase):
+
     def test_no_questions(self):
         """
         If no questions exist, an appropriate message is displayed.
@@ -31,10 +32,10 @@ class QuestionIndexViewTests(TestCase):
         """
         question = create_question(question_text="Past question.", days=-30)
         response = self.client.get(reverse('polls:index'))
-        self.assertQuerySetEqual(
-            response.context['latest_question_list'],
+        self.assertEqual(
+            list(response.context['latest_question_list']),
             [question],
-        )
+            )
 
     def test_future_question(self):
         """

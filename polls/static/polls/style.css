@@ -1,5 +1,5 @@
 a {
-    color: rgb(76, 0, 255);
+    color: rgb(0, 0, 0);
 }
 
 body {
@@ -8,12 +8,26 @@ body {
 }
 
 table, td {
-    border: 1px solid white;
+    border: 5px solid transparent;
     border-collapse: collapse;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 50px;
+    font-size: 20px;
 }
 
 td {
     background-color: #96D4D4;
-    opacity: 50%;
+    opacity: 50%;  
+}
+
+td:hover {
+    background-color: #96D4D4;
+    opacity: 80%;
+}
+
+.index_table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
