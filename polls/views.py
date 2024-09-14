@@ -61,28 +61,38 @@ def vote(request, question_id):
             'error_message': "The Question is not pending currently.",
         })
 
-    # Check if the user already voted for this question
-    user_vote = Vote.objects.filter(user=user, choice__question=question).first()
+    # Check if the user has already voted for this question
+    user_vote = Vote.objects.filter(user=user, choice__question=question).last()
 
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form if no choice was selected
-        return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
+    if request.method == 'POST':
+        # Handle the vote submission
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        except (KeyError, Choice.DoesNotExist):
+            # Redisplay the question voting form if no choice was selected
+            return render(request, 'polls/detail.html', {
+                'question': question,
+                'error_message': "You didn't select a choice.",
+                'user_vote': user_vote  # Show the user's previous vote
+            })
 
-    if user_vote:
-        # If the user has already voted for this question, prevent additional voting
-        return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "You have already voted for this question.",
-        })
-    else:
-        # If no previous vote exists, create a new vote
-        vote = Vote.objects.create(user=user, choice=selected_choice)
-        vote.save()
-        messages.success(request, f"Your vote '{selected_choice.choice_text}' was recorded")
+        # If the user has already voted, delete the old vote before saving the new one
+        if user_vote:
+            if user_vote.choice == selected_choice:
+                messages.info(request, f"You already voted for '{user_vote.choice.choice_text}'.")
+            else:
+                user_vote.delete()
+                messages.info(request, f"Your previous vote for '{user_vote.choice.choice_text}' has been removed.")
 
-    return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+                # Create a new vote for the selected choice
+                Vote.objects.create(user=user, choice=selected_choice)
+                messages.success(request, f"Your vote '{selected_choice.choice_text}' was recorded.")
+        
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+    # If it's a GET request, show the question and the user's previous vote (if any)
+    return render(request, 'polls/detail.html', {
+        'question': question,
+        'user_vote': user_vote  # Show the user's previous vote
+    })
+    
