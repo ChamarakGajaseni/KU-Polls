@@ -1,3 +1,5 @@
+[![Unit Tests](https://github.com/ChamarakGajaseni/ku-polls/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/ChamarakGajaseni/ku-polls/actions/workflows/python-app.yml)
+
 ## KU Polls: Online Survey Questions 
 
 An application to conduct online polls and surveys based
