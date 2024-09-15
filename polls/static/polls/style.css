@@ -7,7 +7,7 @@ body {
     background-size: 100% 100%;
 }
 
-table, td {
+table, td, th {
     border: 5px solid transparent;
     border-collapse: collapse;
     border-radius: 12px;
@@ -17,6 +17,11 @@ table, td {
 
 td {
     background-color: #96D4D4;
+    opacity: 50%;  
+}
+
+th {
+    background-color: #1a9191;
     opacity: 50%;  
 }
 
@@ -30,4 +35,16 @@ td:hover {
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.results_table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.results_table td, th {
+    padding: 20px;
+    padding-inline: 100px;
 }
