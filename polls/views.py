@@ -1,16 +1,16 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Choice, Question, Vote
 import logging
 from django.http import Http404
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in, user_logged_out
+
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -35,7 +35,7 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter()
-    
+
     def get(self, request, *args, **kwargs):
         """
         Check if Question is pending using self.object.can_vote().
@@ -48,24 +48,27 @@ class DetailView(generic.DetailView):
             return redirect('polls:index')
         return super().get(request, *args, **kwargs)
 
+
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
+
 logger = logging.getLogger('polls')
+
 
 @login_required
 def vote(request, question_id):
     # question = get_object_or_404(Question, pk=question_id)
     try:
         question = Question.objects.get(pk=question_id)
-        
-    except:
+
+    except Question.DoesNotExist:
         logger.error(f"Question with id: {question_id} not found")
         raise Http404("Question not found.")
-    
+
     user = request.user
-    
+
     # Ensure the question is open for voting
     if not question.can_vote():
         logger.warning
@@ -73,14 +76,16 @@ def vote(request, question_id):
             'question': question,
             'error_message': "The Question is not pending currently.",
         })
-        
+
     # Check if the user has already voted for this question
-    user_vote = Vote.objects.filter(user=user, choice__question=question).last()
+    user_vote = Vote.objects.filter(user=user,
+                                    choice__question=question).last()
 
     if request.method == 'POST':
         # Handle the vote submission
         try:
-            selected_choice = question.choice_set.get(pk=request.POST['choice'])
+            selected_choice = question.choice_set.get(
+                pk=request.POST['choice'])
         except (KeyError, Choice.DoesNotExist):
             # Redisplay the question voting form if no choice was selected
             logger.warning("Invalid question id or didn't selected choice")
@@ -90,27 +95,35 @@ def vote(request, question_id):
                 'user_vote': user_vote  # Show the user's previous vote
             })
 
-        # If the user has already voted, delete the old vote before saving the new one
+        # If the user has already voted,
+        # delete the old vote before saving the new one
         if user_vote:
             if user_vote.choice == selected_choice:
-                messages.info(request, f"You already voted for '{user_vote.choice.choice_text}'.")
+                messages.info(request, f"You already voted for"
+                              f"'{user_vote.choice.choice_text}'.")
             else:
                 user_vote.delete()
-                messages.info(request, f"Your previous vote for '{user_vote.choice.choice_text}' has been removed.")
+                messages.info(request, f"Your previous vote for"
+                              f"'{user_vote.choice.choice_text}'"
+                              f"has been removed.")
 
                 # Create a new vote for the selected choice
                 Vote.objects.create(user=user, choice=selected_choice)
-                messages.success(request, f"Your vote '{selected_choice.choice_text}' was recorded.")
-        
-        logger.info("Vote submitted for poll #{0}".format(question_id))
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+                messages.success(request,
+                                 f"Your vote '{selected_choice.choice_text}'"
+                                 f"was recorded.")
 
-    # If it's a GET request, show the question and the user's previous vote (if any)
+        logger.info("Vote submitted for poll #{0}".format(question_id))
+        return HttpResponseRedirect(reverse('polls:results',
+                                            args=(question.id)))
+
+    # If it's a GET request, show the question and the user's previous vote
     return render(request, 'polls/detail.html', {
         'question': question,
         'user_vote': user_vote  # Show the user's previous vote
     })
-    
+
+
 def get_client_ip(request):
     """Get the visitor’s IP address using request headers."""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -120,10 +133,12 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
     ip_addr = get_client_ip(request)  # Fetch the user's IP address
     logger.info(f"User {user.username} logged in from {ip_addr}")
+
 
 @receiver(user_logged_out)
 def log_user_logout(sender, request, user, **kwargs):

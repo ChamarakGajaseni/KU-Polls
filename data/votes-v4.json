@@ -1,0 +1,106 @@
+[
+{
+  "model": "polls.vote",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "choice": 21
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "choice": 20
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "choice": 21
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 4,
+  "fields": {
+    "user": 1,
+    "choice": 20
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 17,
+  "fields": {
+    "user": 5,
+    "choice": 10
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 18,
+  "fields": {
+    "user": 5,
+    "choice": 16
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 20,
+  "fields": {
+    "user": 5,
+    "choice": 17
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 33,
+  "fields": {
+    "user": 4,
+    "choice": 17
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 34,
+  "fields": {
+    "user": 4,
+    "choice": 19
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 35,
+  "fields": {
+    "user": 4,
+    "choice": 21
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 37,
+  "fields": {
+    "user": 4,
+    "choice": 18
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 38,
+  "fields": {
+    "user": 4,
+    "choice": 18
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 51,
+  "fields": {
+    "user": 4,
+    "choice": 20
+  }
+}
+]
