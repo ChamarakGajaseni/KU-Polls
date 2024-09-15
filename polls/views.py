@@ -112,10 +112,15 @@ def vote(request, question_id):
                 messages.success(request,
                                  f"Your vote '{selected_choice.choice_text}'"
                                  f"was recorded.")
+        else:
+            Vote.objects.create(user=user, choice=selected_choice)
+            messages.success(request, f"Your vote "
+                             f"'{selected_choice.choice_text}'"
+                             f"was recorded.")
 
         logger.info("Vote submitted for poll #{0}".format(question_id))
         return HttpResponseRedirect(reverse('polls:results',
-                                            args=(question.id)))
+                                            args=(question.id,)))
 
     # If it's a GET request, show the question and the user's previous vote
     return render(request, 'polls/detail.html', {
