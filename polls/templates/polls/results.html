@@ -3,9 +3,34 @@
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 <h1>{{ question.question_text }}</h1>
 
-<ul>
+{% comment %} <ul>
 {% for choice in question.choice_set.all %}
     <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
 {% endfor %}
-</ul>
+</ul> {% endcomment %}
+
+<div class= 'results_table'>
+                <table>
+                    <tr>
+                        <th> Choice </th>
+                        <th> Count </th>
+                    </tr>
+
+                    {% for choice in question.choice_set.all %}
+
+                        <tr>
+                            <td>
+                                <p> {{ choice.choice_text }} </p>
+                            </td>
+
+                            <td>
+                                <p> {{ choice.votes }} vote{{ choice.votes|pluralize }} </p>
+                            </td>
+                
+                        </tr>
+
+                    {% endfor %}
+                </table>
+</div>
+
 <a href="{% url 'polls:index' %}">Back to List of Polls</a>
