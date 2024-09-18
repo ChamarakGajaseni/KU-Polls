@@ -170,3 +170,11 @@ class QuestionDetailViewTests(TestCase):
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+    
+    def test_future_question(self):
+        """
+        Cannot see question's detail if it isn't published yet. 
+        """
+        future_question = create_question(question_text="Future question.", days=30)
+        response = self.client.get(reverse('polls:detail', args=(future_question.id,)))
+        self.assertRedirects(response, reverse('polls:index'))

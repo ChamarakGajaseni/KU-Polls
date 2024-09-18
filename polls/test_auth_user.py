@@ -2,9 +2,9 @@
 import django.test
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate # to "login" a user using code
 from polls.models import Question, Choice
 from mysite import settings
+
 
 class UserAuthTest(django.test.TestCase):
 
@@ -96,3 +96,8 @@ class UserAuthTest(django.test.TestCase):
         #self.assertRedirects(response, reverse('login') )
         login_with_next = f"{reverse('login')}?next={vote_url}"
         self.assertRedirects(response, login_with_next )
+
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()
