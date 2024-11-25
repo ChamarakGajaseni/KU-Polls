@@ -20,7 +20,7 @@ COPY requirements.txt .
 # Install dependencies in Docker container
 RUN pip install -r requirements.txt
 
-COPY . /app/
+COPY . .
 
 # Running Django functions in here is not good!
 # Apply migrations
@@ -34,4 +34,4 @@ COPY . /app/
 
 EXPOSE 8000
 # Run application
-CMD [ "python", "./manage.py", "runserver", "0.0.0.0:8000" ]
+CMD [  "./entrypoint.sh" ]
